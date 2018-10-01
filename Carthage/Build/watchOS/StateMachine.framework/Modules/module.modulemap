@@ -1,0 +1,4 @@
+framework module StateMachine {
+  header "StateMachine-Swift.h"
+  requires objc
+}

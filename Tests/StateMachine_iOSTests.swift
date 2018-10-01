@@ -6,7 +6,7 @@
 //
 
 import XCTest
-@testable import StateMachine_iOS
+@testable import StateMachine
 
 class StateMachine_iOSTests: XCTestCase {
 
@@ -19,8 +19,62 @@ class StateMachine_iOSTests: XCTestCase {
     }
 
     func testExample() {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
+//        let state1 = State("State1")
+//        let state2 = State("State2")
+//
+//        let transitionA = Transition("transitionA", from: state1, to: state2)
+//        let transitionB = Transition("transitionB", from: state2, to: state1)
+//
+//        let stateMachine = StateMachine(initialState: state1, transitions: [transitionA, transitionB])
+//
+//        stateMachine.on(.onState(state2)) { (userInfo) in
+//            print("onState \(state2.name)")
+//        }
+//
+//        stateMachine.on(.leaveState(state1)) { (userInfo) in
+//            print("leaveState \(state1.name)")
+//        }
+//
+//        stateMachine.on(.beforeTransition(transitionA)) { (userInfo) in
+//            print("beforeTransition \(transitionA.name)")
+//        }
+//
+//        stateMachine.on(.onTransition(transitionA)) { (userInfo) in
+//            print("onTransition \(transitionA.name)")
+//        }
+//
+//        stateMachine.on(.afterTransition(transitionA)) { (userInfo) in
+//            print("afterTransition \(transitionA.name)")
+//        }
+//
+//        stateMachine.isCurrent(state: state1)
+//        stateMachine.isCurrent(state: state2)
+//        stateMachine.canFire(transition: transitionA)
+//        stateMachine.canFire(transition: transitionB)
+//
+//        stateMachine.allowedTransitions()
+//
+//        do {
+//            try stateMachine.fire(transition: transitionA, userInfo: nil)
+//        } catch TransitionError.unknown {
+//            print("Transition unknown")
+//        } catch TransitionError.notAllowed {
+//            print("Transition not allowed")
+//        }
+//
+//        stateMachine.isCurrent(state: state2)
+//
+//        stateMachine.canFire(transition: transitionA)
+//        stateMachine.canFire(transition: transitionB)
+//
+//        stateMachine.allowedTransitions()
+//
+//        stateMachine.state(name: "State2")
+//        stateMachine.allStates()
+//
+//        stateMachine.transition(name: "transitionA")
+//
+//        stateMachine.allTransitions()
     }
 
     func testPerformanceExample() {
