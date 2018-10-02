@@ -6,7 +6,7 @@ Pod::Spec.new do |s|
 	    s.license           = { type: 'MIT', file: 'LICENSE' }
 	    s.author            = { 'Amine Bensalah' => 'amine.bensalah@outlook.com' }
 	    s.ios.deployment_target = '10.0'
-	    s.osx.deployment_target = '10.11'
+	    s.osx.deployment_target = '10.12'
 	    s.tvos.deployment_target = '10.0'
 	    s.watchos.deployment_target = '4.0'
 	    s.requires_arc = true
