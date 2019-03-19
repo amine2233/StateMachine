@@ -4,17 +4,18 @@ import PackageDescription
 let package = Package(
     name: "StateMachine",
     products: [
-        // FluentPostgreSQL support for PostGIS
         .library(
             name: "StateMachine",
-            targets: ["StateMachine"]),
+            targets: ["StateMachine"])
         ],
     targets: [
         .target(
             name: "StateMachine",
+            path: "Sources",
             dependencies: []),
         .testTarget(
             name: "StateMachineTests",
-            dependencies: ["StateMachine"]),
+            path: "Tests",
+            dependencies: ["StateMachine"])
         ]
 )
