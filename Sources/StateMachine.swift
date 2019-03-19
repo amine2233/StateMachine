@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Dispatch
 
 /// State
 open class State: Hashable {
@@ -159,7 +160,7 @@ open class StateMachine {
     private let transitionQueue = DispatchQueue(label: "com.statemachine.transition",
                                                 qos: .default,
                                                 attributes: .concurrent,
-                                                autoreleaseFrequency: .workItem,
+                                                autoreleaseFrequency: .inherit,
                                                 target: nil)
     
     private lazy var states: [State] = [State]()

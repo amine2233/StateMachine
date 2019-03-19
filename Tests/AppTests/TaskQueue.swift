@@ -29,4 +29,9 @@ class TaskQueue: XCTestCase {
         }
     }
 
+    static let allTests = [
+        ("testExample",testExample),
+        ("testPerformanceExample",testPerformanceExample)
+    ]
+
 }

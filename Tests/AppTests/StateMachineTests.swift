@@ -70,7 +70,7 @@ private struct StateMachineMocks {
     }
 }
 
-class StateMachine_iOSTests: XCTestCase {
+class StateMachineTests: XCTestCase {
 
     func testAllowedTransition() {
         let transitions = StateMachineMocks.transitions()
@@ -200,11 +200,13 @@ class StateMachine_iOSTests: XCTestCase {
              enforceOrder: true)
     }
 
-    func testPerformanceExample() {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
-        }
-    }
-
+    static let allTests = [
+        ("testAllowedTransition",testAllowedTransition),
+        ("testUnknownTransition",testUnknownTransition),
+        ("testNotAllowedTransition",testNotAllowedTransition),
+        ("testStateObserver",testStateObserver),
+        ("testTransitionObserver",testTransitionObserver),
+        ("testObserverWithUserInfo",testObserverWithUserInfo),
+        ("testStateMachineLifecycle",testStateMachineLifecycle)
+    ]
 }

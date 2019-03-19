@@ -29,4 +29,9 @@ class Retry: XCTestCase {
         }
     }
 
+    static let allTests = [
+        ("testExample",testExample),
+        ("testPerformanceExample",testPerformanceExample)
+    ]
+
 }
