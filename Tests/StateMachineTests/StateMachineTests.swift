@@ -5,6 +5,7 @@
 //  Created by Amine Bensalah on 30/09/2018.
 //
 
+import Foundation
 import XCTest
 @testable import StateMachine
 
@@ -106,7 +107,7 @@ class StateMachineTests: XCTestCase {
     }
     
     func testStateObserver() {
-        let expectation = XCTestExpectation(description: "StateObserver")
+        let expectation = self.expectation(description: "StateObserver")
         
         let transitions = StateMachineMocks.transitions()
         let stateMachine = StateMachine(initialState: StateMachineMocks.stateA(),
@@ -120,12 +121,14 @@ class StateMachineTests: XCTestCase {
         try? stateMachine.fire(transition: transition,
                                userInfo: nil)
         
-        wait(for: [expectation],
-             timeout: 1)
+        waitForExpectations(timeout: 1, handler: nil)
+//        wait(for: [expectation],
+//             timeout: 1.0,
+//             enforceOrder: true)
     }
     
     func testTransitionObserver() {
-        let expectation = XCTestExpectation(description: "TransitionObserver")
+        let expectation = self.expectation(description: "TransitionObserver")
         
         let transitions = StateMachineMocks.transitions()
         let stateMachine = StateMachine(initialState: StateMachineMocks.stateA(),
@@ -139,8 +142,9 @@ class StateMachineTests: XCTestCase {
         try? stateMachine.fire(transition: transition,
                                userInfo: nil)
         
-        wait(for: [expectation],
-             timeout: 1)
+        waitForExpectations(timeout: 1, handler: nil)
+//        wait(for: [expectation],
+//             timeout: 1.0)
     }
     
     func testObserverWithUserInfo() {
@@ -164,10 +168,10 @@ class StateMachineTests: XCTestCase {
     }
     
     func testStateMachineLifecycle() {
-        let beforeTransitionExpectation = XCTestExpectation(description: "beforeTransitionExpectation")
-        let leaveStateExpectation = XCTestExpectation(description: "leaveStateExpectation")
-        let onStateExpectation = XCTestExpectation(description: "onStateExpectation")
-        let onTransitionExpectation = XCTestExpectation(description: "onTransitionExpectation")
+        let beforeTransitionExpectation = self.expectation(description: "beforeTransitionExpectation")
+        let leaveStateExpectation = self.expectation(description: "leaveStateExpectation")
+        let onStateExpectation = self.expectation(description: "onStateExpectation")
+        let onTransitionExpectation = self.expectation(description: "onTransitionExpectation")
         
         let transitions = StateMachineMocks.transitions()
         let stateMachine = StateMachine(initialState: StateMachineMocks.stateA(),
@@ -193,14 +197,16 @@ class StateMachineTests: XCTestCase {
         try? stateMachine.fire(transition: transition,
                                userInfo: nil)
         
-        let expectations = [beforeTransitionExpectation, leaveStateExpectation, onStateExpectation, onTransitionExpectation]
+        _ = [beforeTransitionExpectation, leaveStateExpectation, onStateExpectation, onTransitionExpectation]
         
-        wait(for: expectations,
-             timeout: 1,
-             enforceOrder: true)
+        waitForExpectations(timeout: 1, handler: nil)
+
+//        wait(for: expectations,
+//             timeout: 1.0,
+//             enforceOrder: true)
     }
 
-    static let allTests = [
+    static var allTests = [
         ("testAllowedTransition",testAllowedTransition),
         ("testUnknownTransition",testUnknownTransition),
         ("testNotAllowedTransition",testNotAllowedTransition),

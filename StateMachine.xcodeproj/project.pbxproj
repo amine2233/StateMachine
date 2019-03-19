@@ -7,15 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		67781B9D2240BF6800EE9FF0 /* StateMachineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67781B9A2240BF6800EE9FF0 /* StateMachineTests.swift */; };
-		67781B9E2240BF6800EE9FF0 /* StateMachineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67781B9A2240BF6800EE9FF0 /* StateMachineTests.swift */; };
-		67781B9F2240BF6800EE9FF0 /* StateMachineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67781B9A2240BF6800EE9FF0 /* StateMachineTests.swift */; };
-		67781BA02240BF6800EE9FF0 /* TaskQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67781B9B2240BF6800EE9FF0 /* TaskQueue.swift */; };
-		67781BA12240BF6800EE9FF0 /* TaskQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67781B9B2240BF6800EE9FF0 /* TaskQueue.swift */; };
-		67781BA22240BF6800EE9FF0 /* TaskQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67781B9B2240BF6800EE9FF0 /* TaskQueue.swift */; };
-		67781BA32240BF6800EE9FF0 /* Retry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67781B9C2240BF6800EE9FF0 /* Retry.swift */; };
-		67781BA42240BF6800EE9FF0 /* Retry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67781B9C2240BF6800EE9FF0 /* Retry.swift */; };
-		67781BA52240BF6800EE9FF0 /* Retry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67781B9C2240BF6800EE9FF0 /* Retry.swift */; };
 		67E2D1BD2160DDD400DDD5CF /* StateMachine.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 67E2D1B32160DDD400DDD5CF /* StateMachine.framework */; };
 		67E2D1C42160DDD400DDD5CF /* StateMachine_iOS.h in Headers */ = {isa = PBXBuildFile; fileRef = 67E2D1B62160DDD400DDD5CF /* StateMachine_iOS.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		67E2D1E62160DDFB00DDD5CF /* StateMachine.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 67E2D1DD2160DDFA00DDD5CF /* StateMachine.framework */; };
@@ -23,18 +14,13 @@
 		67E2D2122160DF3500DDD5CF /* StateMachine_iOS.h in Headers */ = {isa = PBXBuildFile; fileRef = 67E2D1B62160DDD400DDD5CF /* StateMachine_iOS.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		67E2D2132160DF3500DDD5CF /* StateMachine_iOS.h in Headers */ = {isa = PBXBuildFile; fileRef = 67E2D1B62160DDD400DDD5CF /* StateMachine_iOS.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		67E2D2142160DF3600DDD5CF /* StateMachine_iOS.h in Headers */ = {isa = PBXBuildFile; fileRef = 67E2D1B62160DDD400DDD5CF /* StateMachine_iOS.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		67E2D2162160E3E600DDD5CF /* StateMachine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67E2D2152160E3E600DDD5CF /* StateMachine.swift */; };
-		67E2D2172160E3E600DDD5CF /* StateMachine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67E2D2152160E3E600DDD5CF /* StateMachine.swift */; };
-		67E2D2182160E3E600DDD5CF /* StateMachine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67E2D2152160E3E600DDD5CF /* StateMachine.swift */; };
-		67E2D2192160E3E600DDD5CF /* StateMachine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67E2D2152160E3E600DDD5CF /* StateMachine.swift */; };
-		67FDAD6421BD2D3B004DBF69 /* TaskQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67FDAD6321BD2D3B004DBF69 /* TaskQueue.swift */; };
-		67FDAD6521BD2D3B004DBF69 /* TaskQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67FDAD6321BD2D3B004DBF69 /* TaskQueue.swift */; };
-		67FDAD6621BD2D3B004DBF69 /* TaskQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67FDAD6321BD2D3B004DBF69 /* TaskQueue.swift */; };
-		67FDAD6721BD2D3B004DBF69 /* TaskQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67FDAD6321BD2D3B004DBF69 /* TaskQueue.swift */; };
-		67FDAD6921BD2EFD004DBF69 /* Retry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67FDAD6821BD2EFD004DBF69 /* Retry.swift */; };
-		67FDAD6A21BD2EFD004DBF69 /* Retry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67FDAD6821BD2EFD004DBF69 /* Retry.swift */; };
-		67FDAD6B21BD2EFD004DBF69 /* Retry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67FDAD6821BD2EFD004DBF69 /* Retry.swift */; };
-		67FDAD6C21BD2EFD004DBF69 /* Retry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67FDAD6821BD2EFD004DBF69 /* Retry.swift */; };
+		AAD92DD82240F67C00D1144B /* StateMachine.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD92DD72240F67C00D1144B /* StateMachine.swift */; };
+		AAD92DD92240F67C00D1144B /* StateMachine.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD92DD72240F67C00D1144B /* StateMachine.swift */; };
+		AAD92DDA2240F67C00D1144B /* StateMachine.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD92DD72240F67C00D1144B /* StateMachine.swift */; };
+		AAD92DDB2240F67C00D1144B /* StateMachine.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD92DD72240F67C00D1144B /* StateMachine.swift */; };
+		AAD92DE22240F68D00D1144B /* StateMachineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD92DDE2240F68D00D1144B /* StateMachineTests.swift */; };
+		AAD92DE32240F68D00D1144B /* StateMachineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD92DDE2240F68D00D1144B /* StateMachineTests.swift */; };
+		AAD92DE42240F68D00D1144B /* StateMachineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD92DDE2240F68D00D1144B /* StateMachineTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -63,9 +49,6 @@
 
 /* Begin PBXFileReference section */
 		67781B982240BA9800EE9FF0 /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
-		67781B9A2240BF6800EE9FF0 /* StateMachineTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StateMachineTests.swift; sourceTree = "<group>"; };
-		67781B9B2240BF6800EE9FF0 /* TaskQueue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TaskQueue.swift; sourceTree = "<group>"; };
-		67781B9C2240BF6800EE9FF0 /* Retry.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Retry.swift; sourceTree = "<group>"; };
 		67781BA62240BF7200EE9FF0 /* LinuxMain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinuxMain.swift; sourceTree = "<group>"; };
 		67E2D1B32160DDD400DDD5CF /* StateMachine.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StateMachine.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		67E2D1B62160DDD400DDD5CF /* StateMachine_iOS.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StateMachine_iOS.h; sourceTree = "<group>"; };
@@ -82,9 +65,9 @@
 		67E2D1FC2160DE0C00DDD5CF /* Info-macOS.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Info-macOS.plist"; sourceTree = "<group>"; };
 		67E2D2012160DE0C00DDD5CF /* StateMachine macOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "StateMachine macOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		67E2D2082160DE0D00DDD5CF /* Info-macOSTest.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Info-macOSTest.plist"; sourceTree = "<group>"; };
-		67E2D2152160E3E600DDD5CF /* StateMachine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateMachine.swift; sourceTree = "<group>"; };
-		67FDAD6321BD2D3B004DBF69 /* TaskQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskQueue.swift; sourceTree = "<group>"; };
-		67FDAD6821BD2EFD004DBF69 /* Retry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Retry.swift; sourceTree = "<group>"; };
+		AAD92DD72240F67C00D1144B /* StateMachine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StateMachine.swift; sourceTree = "<group>"; };
+		AAD92DDD2240F68D00D1144B /* XCTestManifests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XCTestManifests.swift; sourceTree = "<group>"; };
+		AAD92DDE2240F68D00D1144B /* StateMachineTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StateMachineTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -143,16 +126,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		67781B992240BF6800EE9FF0 /* AppTests */ = {
-			isa = PBXGroup;
-			children = (
-				67781B9A2240BF6800EE9FF0 /* StateMachineTests.swift */,
-				67781B9B2240BF6800EE9FF0 /* TaskQueue.swift */,
-				67781B9C2240BF6800EE9FF0 /* Retry.swift */,
-			);
-			path = AppTests;
-			sourceTree = "<group>";
-		};
 		67E2D1A72160DDB000DDD5CF = {
 			isa = PBXGroup;
 			children = (
@@ -180,14 +153,12 @@
 		67E2D2102160DE7C00DDD5CF /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				AAD92DD62240F67C00D1144B /* StateMachine */,
 				67E2D1B62160DDD400DDD5CF /* StateMachine_iOS.h */,
 				67E2D1B72160DDD400DDD5CF /* Info-iOS.plist */,
 				67E2D1D32160DDE000DDD5CF /* Info-watchOS.plist */,
 				67E2D1E02160DDFA00DDD5CF /* Info-tvOS.plist */,
 				67E2D1FC2160DE0C00DDD5CF /* Info-macOS.plist */,
-				67E2D2152160E3E600DDD5CF /* StateMachine.swift */,
-				67FDAD6321BD2D3B004DBF69 /* TaskQueue.swift */,
-				67FDAD6821BD2EFD004DBF69 /* Retry.swift */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -195,13 +166,30 @@
 		67E2D2112160DE7C00DDD5CF /* Tests */ = {
 			isa = PBXGroup;
 			children = (
+				AAD92DDC2240F68D00D1144B /* StateMachineTests */,
 				67781BA62240BF7200EE9FF0 /* LinuxMain.swift */,
-				67781B992240BF6800EE9FF0 /* AppTests */,
 				67E2D1C32160DDD400DDD5CF /* Info-iOSTest.plist */,
 				67E2D1EC2160DDFB00DDD5CF /* Info-tvOSTest.plist */,
 				67E2D2082160DE0D00DDD5CF /* Info-macOSTest.plist */,
 			);
 			path = Tests;
+			sourceTree = "<group>";
+		};
+		AAD92DD62240F67C00D1144B /* StateMachine */ = {
+			isa = PBXGroup;
+			children = (
+				AAD92DD72240F67C00D1144B /* StateMachine.swift */,
+			);
+			path = StateMachine;
+			sourceTree = "<group>";
+		};
+		AAD92DDC2240F68D00D1144B /* StateMachineTests */ = {
+			isa = PBXGroup;
+			children = (
+				AAD92DDD2240F68D00D1144B /* XCTestManifests.swift */,
+				AAD92DDE2240F68D00D1144B /* StateMachineTests.swift */,
+			);
+			path = StateMachineTests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -484,9 +472,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				67FDAD6421BD2D3B004DBF69 /* TaskQueue.swift in Sources */,
-				67FDAD6921BD2EFD004DBF69 /* Retry.swift in Sources */,
-				67E2D2162160E3E600DDD5CF /* StateMachine.swift in Sources */,
+				AAD92DD82240F67C00D1144B /* StateMachine.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -494,9 +480,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				67781BA02240BF6800EE9FF0 /* TaskQueue.swift in Sources */,
-				67781BA32240BF6800EE9FF0 /* Retry.swift in Sources */,
-				67781B9D2240BF6800EE9FF0 /* StateMachineTests.swift in Sources */,
+				AAD92DE22240F68D00D1144B /* StateMachineTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -504,9 +488,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				67FDAD6521BD2D3B004DBF69 /* TaskQueue.swift in Sources */,
-				67FDAD6A21BD2EFD004DBF69 /* Retry.swift in Sources */,
-				67E2D2172160E3E600DDD5CF /* StateMachine.swift in Sources */,
+				AAD92DD92240F67C00D1144B /* StateMachine.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -514,9 +496,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				67FDAD6621BD2D3B004DBF69 /* TaskQueue.swift in Sources */,
-				67FDAD6B21BD2EFD004DBF69 /* Retry.swift in Sources */,
-				67E2D2182160E3E600DDD5CF /* StateMachine.swift in Sources */,
+				AAD92DDA2240F67C00D1144B /* StateMachine.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -524,9 +504,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				67781BA12240BF6800EE9FF0 /* TaskQueue.swift in Sources */,
-				67781BA42240BF6800EE9FF0 /* Retry.swift in Sources */,
-				67781B9E2240BF6800EE9FF0 /* StateMachineTests.swift in Sources */,
+				AAD92DE32240F68D00D1144B /* StateMachineTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -534,9 +512,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				67FDAD6721BD2D3B004DBF69 /* TaskQueue.swift in Sources */,
-				67FDAD6C21BD2EFD004DBF69 /* Retry.swift in Sources */,
-				67E2D2192160E3E600DDD5CF /* StateMachine.swift in Sources */,
+				AAD92DDB2240F67C00D1144B /* StateMachine.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -544,9 +520,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				67781BA22240BF6800EE9FF0 /* TaskQueue.swift in Sources */,
-				67781BA52240BF6800EE9FF0 /* Retry.swift in Sources */,
-				67781B9F2240BF6800EE9FF0 /* StateMachineTests.swift in Sources */,
+				AAD92DE42240F68D00D1144B /* StateMachineTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

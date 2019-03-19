@@ -11,12 +11,10 @@ let package = Package(
     targets: [
         .target(
             name: "StateMachine",
-            dependencies: [],
-            path: "Sources"
+            dependencies: []
             ),
         .testTarget(
             name: "StateMachineTests",
-            dependencies: ["StateMachine"],
-            path: "Tests")
+            dependencies: ["StateMachine"])
         ]
 )

@@ -1,13 +1,7 @@
-#if os(Linux)
-
 import XCTest
-@testable import StateMachine
+import StateMachineTests
 
-XCTMain([
-    // StateMachineTests
-    testCase(StateMachineTests.allTests),
-    testCase(TaskQueue.allTests),
-    testCase(Retry.allTests)
-])
+var tests = [XCTestCaseEntry]()
+tests += StateMachineTests.allTests()
+XCTMain(tests)
 
-#endif
