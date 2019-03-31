@@ -11,11 +11,6 @@ import Dispatch
 /// State
 open class State: Hashable {
     
-    /// hash Value
-    public var hashValue: Int {
-        return self.name.hashValue
-    }
-    
     /// Name of state
     public let name: String
     
@@ -27,6 +22,11 @@ open class State: Hashable {
     /// - Returns: The new state
     public init(_ name: String) {
         self.name = name
+    }
+
+    /// hash Value
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(name)
     }
 }
 
@@ -49,11 +49,6 @@ extension State: Equatable {
 /// The Transition class
 open class Transition: Hashable {
     
-    /// hash Value
-    public var hashValue: Int {
-        return self.name.hashValue
-    }
-    
     /// Name of Transition
     public let name: String
     /// The begin state
@@ -73,6 +68,11 @@ open class Transition: Hashable {
         self.name = name
         self.from = from
         self.to = to
+    }
+
+    /// hash Value
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(name)
     }
 }
 
@@ -107,19 +107,20 @@ public enum LifecycleEvent {
 
 /// LifecycleEvent Hashable
 extension LifecycleEvent: Hashable {
-    
-    public var hashValue: Int {
+
+    /// hash Value
+    public func hash(into hasher: inout Hasher) {
         switch self {
         case .beforeTransition(let value):
-            return "bt\(value.hashValue)".hashValue
+            hasher.combine("bt\(value.hashValue)")
         case .leaveState(let value):
-            return "ls\(value.hashValue)".hashValue
+            hasher.combine("ls\(value.hashValue)")
         case .onState(let value):
-            return "os\(value.hashValue)".hashValue
+            hasher.combine("os\(value.hashValue)")
         case .onTransition(let value):
-            return "ot\(value.hashValue)".hashValue
+            hasher.combine("ot\(value.hashValue)")
         case .afterTransition(let value):
-            return "at\(value.hashValue)".hashValue
+            hasher.combine("at\(value.hashValue)")
         }
     }
 }
