@@ -73,6 +73,8 @@ open class Transition: Hashable {
     /// hash Value
     public func hash(into hasher: inout Hasher) {
         hasher.combine(name)
+        hasher.combine(from)
+        hasher.combine(to)
     }
 }
 
@@ -158,20 +160,23 @@ private struct Context {
 open class StateMachine {
     private var currentState: State
     
-    private let transitionQueue = DispatchQueue(label: "com.statemachine.transition",
-                                                qos: .default,
-                                                attributes: .concurrent,
-                                                autoreleaseFrequency: .inherit,
-                                                target: nil)
+    private let transitionQueue = DispatchQueue(
+        label: "com.statemachine.transition",
+        qos: .default,
+        attributes: .concurrent,
+        autoreleaseFrequency: .inherit,
+        target: nil
+    )
     
     private lazy var states: [State] = [State]()
     private lazy var transitions: [Transition] = [Transition]()
     private lazy var map: [State: [Transition]] = [State: [Transition]]()
     private lazy var contexts: [LifecycleEvent: Context] = [LifecycleEvent: Context]()
     
-    public init(initialState: State,
-                transitions: [Transition]) {
-        
+    public init(
+        initialState: State,
+        transitions: [Transition]
+    ) {    
         self.currentState = initialState
         configure(transitions: transitions)
     }
@@ -212,9 +217,11 @@ open class StateMachine {
     
     // MARK: Transition
     
-    public func fire(transition: Transition,
-                     userInfo: [AnyHashable: Any]?) throws {
-        
+    public func fire(
+        transition: Transition,
+        userInfo: [AnyHashable: Any]?
+    ) throws {
+
         if !transitions.contains(transition) {
             throw TransitionError.unknown
         }
@@ -225,20 +232,20 @@ open class StateMachine {
         
         transitionQueue.async(flags: .barrier) { [weak self] in
             self?.begin(transition)
-            self?.execute(transition,
-                          userInfo: userInfo)
+            self?.execute(transition, userInfo: userInfo)
             self?.end(transition)
         }
     }
     
     // MARK: Observer
     
-    public func on(_ event: LifecycleEvent,
-                   queue: DispatchQueue = DispatchQueue.main,
-                   using block: @escaping([AnyHashable: Any]?) -> Void) {
+    public func on(
+        _ event: LifecycleEvent,
+        queue: DispatchQueue = DispatchQueue.main,
+        using block: @escaping([AnyHashable: Any]?) -> Void
+    ) {
         
-        let context = Context(queue: queue,
-                              block: block)
+        let context = Context(queue: queue, block: block)
         contexts[event] = context
     }
     
@@ -258,8 +265,7 @@ open class StateMachine {
         }
     }
     
-    private func execute(_ transition: Transition,
-                         userInfo: [AnyHashable: Any]?) {
+    private func execute(_ transition: Transition, userInfo: [AnyHashable: Any]?) {
         
         currentState = transition.to
         
@@ -320,9 +326,7 @@ open class StateMachine {
         var state: State?
         
         transitionQueue.sync {
-            state = states.first(where: {
-                $0.name == name
-            })
+            state = states.first(where: { $0.name == name })
         }
         
         return state
@@ -342,9 +346,7 @@ open class StateMachine {
         var transition: Transition?
         
         transitionQueue.sync {
-            transition = transitions.first(where: {
-                $0.name == name
-            })
+            transition = transitions.first(where: { $0.name == name })
         }
         
         return transition

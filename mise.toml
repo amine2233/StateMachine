@@ -1,0 +1,6 @@
+[tools]
+swiftlint = "0.57.1"
+mint = "0.18.0"
+
+[alias]
+mint = "asdf:https://github.com/amine2233/asdf-mint.git"

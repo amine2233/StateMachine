@@ -42,3 +42,5 @@ Carthage/Build
 
 ## Jazzy docs
 docs/
+Mintfile
+.envrc
