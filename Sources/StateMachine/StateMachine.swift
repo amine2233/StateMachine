@@ -74,7 +74,7 @@ public actor StateMachine {
     /// The state the machine is currently in.
     public private(set) var currentState: State
 
-    private nonisolated let map: [State: [Transition]]
+    private let map: [State: [Transition]]
     private var observers: [LifecycleEvent: Observer] = [:]
 
     /// Creates a machine starting on `initialState`.
