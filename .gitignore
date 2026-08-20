@@ -42,3 +42,7 @@ Carthage/Build
 
 ## Jazzy docs
 docs/
+
+## Secret files
+*.env
+.envrc
