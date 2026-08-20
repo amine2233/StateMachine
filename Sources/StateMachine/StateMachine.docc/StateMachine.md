@@ -65,4 +65,5 @@ server-side example.
 
 ### Guides
 
+- <doc:OnboardingWithSwiftUI>
 - <doc:PersistingWithVapor>

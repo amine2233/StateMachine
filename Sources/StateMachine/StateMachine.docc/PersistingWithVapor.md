@@ -322,6 +322,7 @@ code, the position lives in the row.
 
 ## See Also
 
+- <doc:OnboardingWithSwiftUI>
 - ``StateMachine/StateMachine/currentState``
 - ``StateMachine/StateMachine/allowedTransitions``
 - ``LifecycleEvent``
