@@ -1,4 +1,4 @@
-# Driving a SwiftUI onboarding flow
+# Driving a SwiftUI onboarding flow (iOS 17 and later)
 
 Walk a five-step onboarding with a `NavigationStack`, where the machine decides what "next",
 "back" and "start over" mean.
