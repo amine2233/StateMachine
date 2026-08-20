@@ -18,9 +18,9 @@ public struct Transition: Hashable, Sendable {
     /// Name of the transition.
     public let name: String
     /// The origin state.
-    public let from: State
+    public let origin: State
     /// The destination state.
-    public let to: State
+    public let destination: State
 
     /// Creates a transition.
     ///
@@ -28,12 +28,12 @@ public struct Transition: Hashable, Sendable {
     ///
     /// - Parameters:
     ///   - name: The name of the transition.
-    ///   - from: The origin state.
-    ///   - to: The destination state.
-    public init(_ name: String, from: State, to: State) {
+    ///   - origin: The origin state.
+    ///   - destination: The destination state.
+    public init(_ name: String, from origin: State, to destination: State) {
         self.name = name
-        self.from = from
-        self.to = to
+        self.origin = origin
+        self.destination = destination
     }
 }
 
@@ -83,30 +83,41 @@ public actor StateMachine {
     ///   - initialState: The state the machine starts in.
     ///   - transitions: The transitions the machine accepts.
     public init(initialState: State, transitions: [Transition]) {
+        let graph = Graph(transitions: transitions)
+
         self.currentState = initialState
-        (self.states, self.transitions, self.map) = Self.build(transitions: transitions)
+        self.states = graph.states
+        self.transitions = graph.transitions
+        self.map = graph.map
     }
 
-    private static func build(
-        transitions: [Transition]
-    ) -> (states: [State], transitions: [Transition], map: [State: [Transition]]) {
-        var states: [State] = []
-        var knownTransitions: [Transition] = []
-        var map: [State: [Transition]] = [:]
+    /// The deduplicated graph a machine is built from.
+    private struct Graph {
+        let states: [State]
+        let transitions: [Transition]
+        let map: [State: [Transition]]
 
-        for transition in transitions {
-            for state in [transition.from, transition.to] where map[state] == nil {
-                states.append(state)
-                map[state] = []
+        init(transitions: [Transition]) {
+            var states: [State] = []
+            var knownTransitions: [Transition] = []
+            var map: [State: [Transition]] = [:]
+
+            for transition in transitions {
+                for state in [transition.origin, transition.destination] where map[state] == nil {
+                    states.append(state)
+                    map[state] = []
+                }
+
+                guard !knownTransitions.contains(transition) else { continue }
+
+                knownTransitions.append(transition)
+                map[transition.origin]?.append(transition)
             }
 
-            guard !knownTransitions.contains(transition) else { continue }
-
-            knownTransitions.append(transition)
-            map[transition.from]?.append(transition)
+            self.states = states
+            self.transitions = knownTransitions
+            self.map = map
         }
-
-        return (states, knownTransitions, map)
     }
 
     // MARK: Transition
@@ -127,11 +138,11 @@ public actor StateMachine {
         }
 
         await notify(.beforeTransition(transition))
-        await notify(.leaveState(transition.from))
+        await notify(.leaveState(transition.origin))
 
-        currentState = transition.to
+        currentState = transition.destination
 
-        await notify(.onState(transition.to), userInfo: userInfo)
+        await notify(.onState(transition.destination), userInfo: userInfo)
         await notify(.onTransition(transition), userInfo: userInfo)
         await notify(.afterTransition(transition))
     }

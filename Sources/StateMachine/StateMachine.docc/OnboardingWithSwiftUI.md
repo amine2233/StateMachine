@@ -89,15 +89,15 @@ enum OnboardingFlow {
     }
 
     static func forward(from step: OnboardingStep) -> Transition? {
-        forward.first { $0.from == step.state }
+        forward.first { $0.origin == step.state }
     }
 
     static func backward(from step: OnboardingStep) -> Transition? {
-        backward.first { $0.from == step.state }
+        backward.first { $0.origin == step.state }
     }
 
     static func toStart(from step: OnboardingStep) -> Transition? {
-        toStart.first { $0.from == step.state }
+        toStart.first { $0.origin == step.state }
     }
 }
 ```

@@ -252,8 +252,8 @@ a lost race:
 ```swift
 let updated = try await Order.query(on: db)
     .filter(\.$id == id)
-    .filter(\.$state == transition.from.name)   // still where we read it
-    .set(\.$state, to: transition.to.name)
+    .filter(\.$state == transition.origin.name)   // still where we read it
+    .set(\.$state, to: transition.destination.name)
     .update()
 ```
 
@@ -272,10 +272,10 @@ private func observeAudit(
 ) async {
     let reference = order.reference
 
-    await machine.on(.leaveState(transition.from)) { _ in
+    await machine.on(.leaveState(transition.origin)) { _ in
         logger.info("order leaving state", metadata: [
             "order": .string(reference),
-            "state": .string(transition.from.name)
+            "state": .string(transition.origin.name)
         ])
     }
 
@@ -283,7 +283,7 @@ private func observeAudit(
         logger.notice("order transitioned", metadata: [
             "order": .string(userInfo?["reference"] as? String ?? reference),
             "transition": .string(transition.name),
-            "to": .string(transition.to.name)
+            "to": .string(transition.destination.name)
         ])
     }
 }
