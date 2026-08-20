@@ -1,6 +1,6 @@
 ---
 name: Bug report
-about: Report a defect in AppleDeveloperAPI
+about: Report a defect in StateMachine
 title: "bug: "
 labels: ["bug"]
 ---
