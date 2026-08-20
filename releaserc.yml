@@ -1,0 +1,11 @@
+version: 1
+content:
+  default_branch: main
+  default_repository: origin
+  tag_format: "${version}"
+  skip_ci_label: "[skip actions]"
+  git_glob_patterns:
+    - "README.md"
+    - "CHANGELOG.md"
+  scripts:
+    - './bumpversion.sh "${lastRelease.version}" "${nextRelease.version}" "${nextRelease.type}"'
