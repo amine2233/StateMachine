@@ -9,15 +9,17 @@ let package = Package(
     products: [
         .library(
             name: "StateMachine",
-            targets: ["StateMachine"])
-        ],
+            targets: ["StateMachine"]
+        )
+    ],
     targets: [
         .target(
             name: "StateMachine",
             dependencies: []
-            ),
+        ),
         .testTarget(
             name: "StateMachineTests",
-            dependencies: ["StateMachine"])
-        ]
+            dependencies: ["StateMachine"]
+        )
+    ]
 )
