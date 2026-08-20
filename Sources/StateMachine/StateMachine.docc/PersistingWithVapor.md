@@ -147,7 +147,7 @@ struct OrderController: RouteCollection {
 
     @Sendable
     func show(req: Request) async throws -> OrderStatus {
-        let order = try await find(req)
+let order = try await find(req, on: req.db)
         let state = try state(of: order)
 
         return OrderStatus(
