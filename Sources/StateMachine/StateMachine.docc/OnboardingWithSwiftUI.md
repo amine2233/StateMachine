@@ -154,6 +154,7 @@ final class OnboardingModel {
         }
 
         await sync()
+        if step == .ready { finish() }
     }
 
     func advance() async {
