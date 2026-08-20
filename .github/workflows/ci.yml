@@ -1,0 +1,20 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  ci:
+    permissions:
+      contents: read
+      pull-requests: write
+    uses: amine2233/ci-shared/.github/workflows/ci.yml@1.1
+    with:
+      enable-macos: true
+      enable-linux: true
+      enable-lint: true
+      enable-coverage: false
+      enable-title-check: true
