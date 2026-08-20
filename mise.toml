@@ -103,7 +103,7 @@ before=$(git diff)
 executor format .
 if [[ "$before" != "$(git diff)" ]]; then
     git diff
-    echo "❌ formatting changed files — commit the result of 'mise format'" >&2
+    echo "❌ formatting changed files — commit the result of 'mise run format'" >&2
     exit 1
 fi
 '''
