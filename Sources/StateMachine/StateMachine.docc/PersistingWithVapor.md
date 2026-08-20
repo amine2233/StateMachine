@@ -122,8 +122,8 @@ struct CreateOrder: AsyncMigration {
 }
 ```
 
-Deriving the enum cases from `OrderWorkflow.states` means adding a state to the workflow and
-forgetting the migration is a compile-time-visible mistake rather than a runtime one. On a database
+Deriving the enum cases from `OrderWorkflow.states` keeps the initial schema in sync with the workflow. If
+the workflow changes after deployment, add a migration to update the existing enum. On a database
 without native enums, a `.string` column plus a `CHECK` constraint does the same job.
 
 ### Rebuild, fire, save
