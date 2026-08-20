@@ -1,10 +1,9 @@
-import Foundation
-import XCTest
+import Testing
 @testable import StateMachine
 
 // MARK: Mocks
-private enum Mocks {
 
+private enum Mocks {
     static let stateA = State("stateA")
     static let stateB = State("stateB")
     static let stateC = State("stateC")
@@ -25,7 +24,6 @@ private enum Mocks {
 
 @Suite
 struct StateMachineTests {
-
     @Test
     func allowedTransition() async throws {
         let stateMachine = Mocks.machine()

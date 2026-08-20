@@ -1,14 +1,9 @@
-import Dispatch
-import Foundation
-
-/// State
-open class State: Hashable {
-    
-    /// Name of state
+/// A named state of the machine.
+public struct State: Hashable, Sendable {
+    /// Name of the state.
     public let name: String
 
-    
-    /// StateMachine: Init State whit name
+    /// Creates a state.
     ///
     ///     let state = State("Start")
     ///
@@ -20,7 +15,6 @@ open class State: Hashable {
 
 /// A named transition between two states.
 public struct Transition: Hashable, Sendable {
-
     /// Name of the transition.
     public let name: String
     /// The origin state.
@@ -45,7 +39,6 @@ public struct Transition: Hashable, Sendable {
 
 /// A point in the machine lifecycle an observer can subscribe to.
 public enum LifecycleEvent: Hashable, Sendable {
-
     // State
     case onState(State)
     case leaveState(State)
@@ -58,7 +51,6 @@ public enum LifecycleEvent: Hashable, Sendable {
 
 /// Errors thrown when firing a transition.
 public enum TransitionError: Error, Sendable {
-
     /// The transition is not part of the machine.
     case unknown
     /// The transition cannot be fired from the current state.
@@ -67,7 +59,6 @@ public enum TransitionError: Error, Sendable {
 
 /// A thread-safe finite state machine.
 public actor StateMachine {
-
     /// Payload forwarded to the lifecycle observers.
     public typealias UserInfo = [String: any Sendable]
 
@@ -93,7 +84,7 @@ public actor StateMachine {
     ///   - transitions: The transitions the machine accepts.
     public init(initialState: State, transitions: [Transition]) {
         self.currentState = initialState
-        (states, self.transitions, map) = Self.build(transitions: transitions)
+        (self.states, self.transitions, self.map) = Self.build(transitions: transitions)
     }
 
     private static func build(
@@ -131,7 +122,6 @@ public actor StateMachine {
         guard transitions.contains(transition) else {
             throw TransitionError.unknown
         }
-
         guard canFire(transition: transition) else {
             throw TransitionError.notAllowed
         }
