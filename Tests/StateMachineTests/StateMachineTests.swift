@@ -1,237 +1,134 @@
-import Foundation
-import XCTest
+import Testing
 @testable import StateMachine
 
 // MARK: Mocks
 
-private enum StateMachineMocks {
-    enum Constants {
-        static let stateA = "stateA"
-        static let stateB = "stateB"
-        static let stateC = "stateC"
+private enum Mocks {
+    static let stateA = State("stateA")
+    static let stateB = State("stateB")
+    static let stateC = State("stateC")
 
-        static let transitionA = "transitionA"
-        static let transitionB = "transitionB"
-        static let transitionC = "transitionC"
-    }
+    static let transitionA = Transition("transitionA", from: stateA, to: stateB)
+    static let transitionB = Transition("transitionB", from: stateB, to: stateA)
+    static let transitionC = Transition("transitionC", from: stateB, to: stateC)
+    static let unknownTransition = Transition("unknown", from: stateB, to: stateA)
 
-    static func stateA() -> State {
-        State(Constants.stateA)
-    }
+    static let transitions = [transitionA, transitionB]
 
-    static func stateB() -> State {
-        State(Constants.stateB)
-    }
+    static let userInfo: StateMachine.UserInfo = ["key": "object"]
 
-    static func stateC() -> State {
-        State(Constants.stateC)
-    }
-
-    static func transitionA() -> Transition {
-        Transition(
-            Constants.transitionA,
-            from: stateA(),
-            to: stateB()
-        )
-    }
-
-    static func transitionB() -> Transition {
-        Transition(
-            Constants.transitionB,
-            from: stateB(),
-            to: stateA()
-        )
-    }
-
-    static func transitionC() -> Transition {
-        Transition(
-            Constants.transitionB,
-            from: stateB(),
-            to: stateC()
-        )
-    }
-
-    static func unknownTransition() -> Transition {
-        Transition(
-            "unknown",
-            from: stateB(),
-            to: stateA()
-        )
-    }
-
-    static func transitions() -> [Transition] {
-        [transitionA(), transitionB()]
-    }
-
-    static func userInfo() -> [AnyHashable: Any] {
-        var userInfo = [AnyHashable: Any]()
-        userInfo["key"] = "object"
-
-        return userInfo
+    static func machine() -> StateMachine {
+        StateMachine(initialState: stateA, transitions: transitions)
     }
 }
 
-class StateMachineTests: XCTestCase {
-    func testAllowedTransition() {
-        let transitions = StateMachineMocks.transitions()
-        let stateMachine = StateMachine(initialState: StateMachineMocks.stateA(), transitions: transitions)
-        let transition = StateMachineMocks.transitionA()
+@Suite
+struct StateMachineTests {
+    @Test
+    func allowedTransition() async throws {
+        let stateMachine = Mocks.machine()
 
-        XCTAssertNoThrow(try stateMachine.fire(transition: transition, userInfo: nil))
+        try await stateMachine.fire(transition: Mocks.transitionA)
 
-        let expectedState = StateMachineMocks.stateB()
-        XCTAssertTrue(stateMachine.isCurrent(state: expectedState))
+        #expect(await stateMachine.currentState == Mocks.stateB)
     }
 
-    func testUnknownTransition() {
-        let transitions = StateMachineMocks.transitions()
-        let stateMachine = StateMachine(
-            initialState: StateMachineMocks.stateA(),
-            transitions: transitions
-        )
-        let transition = StateMachineMocks.unknownTransition()
-        XCTAssertThrowsError(try stateMachine.fire(transition: transition, userInfo: nil)) { error in
-            XCTAssertEqual(error as? TransitionError, TransitionError.unknown)
+    @Test
+    func unknownTransition() async {
+        let stateMachine = Mocks.machine()
+
+        await #expect(throws: TransitionError.unknown) {
+            try await stateMachine.fire(transition: Mocks.unknownTransition)
         }
     }
 
-    func testNotAllowedTransition() {
-        let transitions = StateMachineMocks.transitions()
-        let stateMachine = StateMachine(
-            initialState: StateMachineMocks.stateA(),
-            transitions: transitions
-        )
+    @Test
+    func notAllowedTransition() async {
+        let stateMachine = Mocks.machine()
 
-        let transition = StateMachineMocks.transitionB()
-
-        XCTAssertThrowsError(try stateMachine.fire(transition: transition, userInfo: nil)) { error in
-            XCTAssertEqual(error as? TransitionError, TransitionError.notAllowed)
+        await #expect(throws: TransitionError.notAllowed) {
+            try await stateMachine.fire(transition: Mocks.transitionB)
         }
     }
 
-    func testStateObserver() {
-        let expectation = expectation(description: "StateObserver")
+    @Test
+    func stateObserver() async throws {
+        let stateMachine = Mocks.machine()
 
-        let transitions = StateMachineMocks.transitions()
-        let stateMachine = StateMachine(
-            initialState: StateMachineMocks.stateA(),
-            transitions: transitions
-        )
-        let transition = StateMachineMocks.transitionA()
-
-        stateMachine.on(.onState(StateMachineMocks.stateB())) { _ in
-            expectation.fulfill()
+        try await confirmation("onState") { observed in
+            await stateMachine.on(.onState(Mocks.stateB)) { _ in observed() }
+            try await stateMachine.fire(transition: Mocks.transitionA)
         }
-
-        try? stateMachine.fire(
-            transition: transition,
-            userInfo: nil
-        )
-
-        waitForExpectations(timeout: 1, handler: nil)
-//        wait(for: [expectation],
-//             timeout: 1.0,
-//             enforceOrder: true)
     }
 
-    func testTransitionObserver() {
-        let expectation = expectation(description: "TransitionObserver")
+    @Test
+    func transitionObserver() async throws {
+        let stateMachine = Mocks.machine()
 
-        let transitions = StateMachineMocks.transitions()
-        let stateMachine = StateMachine(
-            initialState: StateMachineMocks.stateA(),
-            transitions: transitions
-        )
-        let transition = StateMachineMocks.transitionA()
-
-        stateMachine.on(.onTransition(transition)) { _ in
-            expectation.fulfill()
+        try await confirmation("onTransition") { observed in
+            await stateMachine.on(.onTransition(Mocks.transitionA)) { _ in observed() }
+            try await stateMachine.fire(transition: Mocks.transitionA)
         }
-
-        try? stateMachine.fire(
-            transition: transition,
-            userInfo: nil
-        )
-
-        waitForExpectations(timeout: 1, handler: nil)
-//        wait(for: [expectation],
-//             timeout: 1.0)
     }
 
-    func testObserverWithUserInfo() {
-        let transitions = StateMachineMocks.transitions()
-        let stateMachine = StateMachine(
-            initialState: StateMachineMocks.stateA(),
-            transitions: transitions
-        )
-        let transition = StateMachineMocks.transitionA()
-        let expectedUserInfo = StateMachineMocks.userInfo()
+    @Test
+    func observerReceivesUserInfo() async throws {
+        let stateMachine = Mocks.machine()
 
-        stateMachine.on(.onTransition(StateMachineMocks.transitionB())) { userInfo in
-            guard let userInfo else {
-                XCTFail("User Info must exists")
-                return
+        try await confirmation("userInfo") { observed in
+            await stateMachine.on(.onTransition(Mocks.transitionA)) { userInfo in
+                #expect(userInfo?["key"] as? String == "object")
+                observed()
             }
-
-            XCTAssertTrue(NSDictionary(dictionary: userInfo).isEqual(to: expectedUserInfo))
+            try await stateMachine.fire(transition: Mocks.transitionA, userInfo: Mocks.userInfo)
         }
-
-        try? stateMachine.fire(
-            transition: transition,
-            userInfo: StateMachineMocks.userInfo()
-        )
     }
 
-    func testStateMachineLifecycle() {
-        let beforeTransitionExpectation = expectation(description: "beforeTransitionExpectation")
-        let leaveStateExpectation = expectation(description: "leaveStateExpectation")
-        let onStateExpectation = expectation(description: "onStateExpectation")
-        let onTransitionExpectation = expectation(description: "onTransitionExpectation")
+    @Test
+    func lifecycleRunsInOrder() async throws {
+        let stateMachine = Mocks.machine()
+        let recorder = Recorder()
 
-        let transitions = StateMachineMocks.transitions()
+        await stateMachine.on(.beforeTransition(Mocks.transitionA)) { _ in await recorder.record("before") }
+        await stateMachine.on(.leaveState(Mocks.stateA)) { _ in await recorder.record("leave") }
+        await stateMachine.on(.onState(Mocks.stateB)) { _ in await recorder.record("onState") }
+        await stateMachine.on(.onTransition(Mocks.transitionA)) { _ in await recorder.record("onTransition") }
+        await stateMachine.on(.afterTransition(Mocks.transitionA)) { _ in await recorder.record("after") }
+
+        try await stateMachine.fire(transition: Mocks.transitionA)
+
+        #expect(await recorder.events == ["before", "leave", "onState", "onTransition", "after"])
+    }
+
+    @Test
+    func allowedTransitionsFollowCurrentState() async throws {
         let stateMachine = StateMachine(
-            initialState: StateMachineMocks.stateA(),
-            transitions: transitions
-        )
-        let transition = StateMachineMocks.transitionA()
-
-        stateMachine.on(.beforeTransition(transition)) { _ in
-            beforeTransitionExpectation.fulfill()
-        }
-
-        stateMachine.on(.leaveState(StateMachineMocks.stateA())) { _ in
-            leaveStateExpectation.fulfill()
-        }
-
-        stateMachine.on(.onState(StateMachineMocks.stateB())) { _ in
-            onStateExpectation.fulfill()
-        }
-
-        stateMachine.on(.onTransition(transition)) { _ in
-            onTransitionExpectation.fulfill()
-        }
-
-        try? stateMachine.fire(
-            transition: transition,
-            userInfo: nil
+            initialState: Mocks.stateA,
+            transitions: [Mocks.transitionA, Mocks.transitionB, Mocks.transitionC]
         )
 
-        _ = [beforeTransitionExpectation, leaveStateExpectation, onStateExpectation, onTransitionExpectation]
+        #expect(await stateMachine.allowedTransitions == [Mocks.transitionA])
 
-        waitForExpectations(timeout: 1, handler: nil)
+        try await stateMachine.fire(transition: Mocks.transitionA)
 
-//        wait(for: expectations,
-//             timeout: 1.0,
-//             enforceOrder: true)
+        #expect(await stateMachine.allowedTransitions == [Mocks.transitionB, Mocks.transitionC])
     }
 
-    static var allTests = [
-        ("testAllowedTransition", testAllowedTransition),
-        ("testUnknownTransition", testUnknownTransition),
-        ("testNotAllowedTransition", testNotAllowedTransition),
-        ("testStateObserver", testStateObserver),
-        ("testTransitionObserver", testTransitionObserver),
-        ("testObserverWithUserInfo", testObserverWithUserInfo),
-        ("testStateMachineLifecycle", testStateMachineLifecycle)
-    ]
+    @Test
+    func lookupByName() {
+        let stateMachine = Mocks.machine()
+
+        #expect(stateMachine.state(name: "stateB") == Mocks.stateB)
+        #expect(stateMachine.state(name: "stateC") == nil)
+        #expect(stateMachine.transition(name: "transitionA") == Mocks.transitionA)
+        #expect(stateMachine.transition(name: "unknown") == nil)
+    }
+}
+
+private actor Recorder {
+    private(set) var events: [String] = []
+
+    func record(_ event: String) {
+        events.append(event)
+    }
 }

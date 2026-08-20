@@ -1,355 +1,175 @@
-import Dispatch
-import Foundation
-
-/// State
-open class State: Hashable {
-    /// Name of state
+/// A named state of the machine.
+public struct State: Hashable, Sendable {
+    /// Name of the state.
     public let name: String
 
-    /// StateMachine: Init State whit name
+    /// Creates a state.
     ///
     ///     let state = State("Start")
     ///
-    /// - Parameter name: The name of state
-    /// - Returns: The new state
+    /// - Parameter name: The name of the state.
     public init(_ name: String) {
         self.name = name
     }
-
-    /// hash Value
-    public func hash(into hasher: inout Hasher) {
-        hasher.combine(name)
-    }
 }
 
-/// State Equatable
-extension State: Equatable {
-    /// Returns a Boolean value indicating whether two values are equal.
-    ///
-    /// Equality is the inverse of inequality. For any values `a` and `b`,
-    /// `a == b` implies that `a != b` is `false`.
-    ///
-    /// - Parameters:
-    ///   - lhs: A value to compare.
-    ///   - rhs: Another value to compare.
-    public static func == (lhs: State, rhs: State) -> Bool {
-        lhs.name == rhs.name
-    }
-}
-
-/// The Transition class
-open class Transition: Hashable {
-    /// Name of Transition
+/// A named transition between two states.
+public struct Transition: Hashable, Sendable {
+    /// Name of the transition.
     public let name: String
-    /// The begin state
+    /// The origin state.
     public let from: State
-    /// The destination State
+    /// The destination state.
     public let to: State
 
-    /// StateMachine: Init Transition whit name
+    /// Creates a transition.
     ///
     ///     let transition = Transition("Start", from: State("Start"), to: State("Stop"))
     ///
-    /// - Parameter name:   The name of state
-    /// - Parameter from:   The start state
-    /// - Parameter to:     The destination state
-    /// - Returns: The new state
+    /// - Parameters:
+    ///   - name: The name of the transition.
+    ///   - from: The origin state.
+    ///   - to: The destination state.
     public init(_ name: String, from: State, to: State) {
         self.name = name
         self.from = from
         self.to = to
     }
-
-    /// hash Value
-    public func hash(into hasher: inout Hasher) {
-        hasher.combine(name)
-    }
 }
 
-/// Transition Equatable
-extension Transition: Equatable {
-    /// Returns a Boolean value indicating whether two values are equal.
-    ///
-    /// Equality is the inverse of inequality. For any values `a` and `b`,
-    /// `a == b` implies that `a != b` is `false`.
-    ///
-    /// - Parameters:
-    ///   - lhs: A value to compare.
-    ///   - rhs: Another value to compare.
-    public static func == (lhs: Transition, rhs: Transition) -> Bool {
-        lhs.name == rhs.name && lhs.from == rhs.from && lhs.to == rhs.to
-    }
-}
-
-public enum LifecycleEvent {
+/// A point in the machine lifecycle an observer can subscribe to.
+public enum LifecycleEvent: Hashable, Sendable {
     // State
-    case onState(_: State)
-    case leaveState(_: State)
+    case onState(State)
+    case leaveState(State)
 
-    // Transaition
-    case beforeTransition(_: Transition)
-    case onTransition(_: Transition)
-    case afterTransition(_: Transition)
+    // Transition
+    case beforeTransition(Transition)
+    case onTransition(Transition)
+    case afterTransition(Transition)
 }
 
-/// LifecycleEvent Hashable
-extension LifecycleEvent: Hashable {
-    /// hash Value
-    public func hash(into hasher: inout Hasher) {
-        switch self {
-        case let .beforeTransition(value):
-            hasher.combine("bt\(value.hashValue)")
-        case let .leaveState(value):
-            hasher.combine("ls\(value.hashValue)")
-        case let .onState(value):
-            hasher.combine("os\(value.hashValue)")
-        case let .onTransition(value):
-            hasher.combine("ot\(value.hashValue)")
-        case let .afterTransition(value):
-            hasher.combine("at\(value.hashValue)")
-        }
-    }
-}
-
-/// LifecycleEvent Equatable
-extension LifecycleEvent: Equatable {
-    /// Returns a Boolean value indicating whether two values are equal.
-    ///
-    /// Equality is the inverse of inequality. For any values `a` and `b`,
-    /// `a == b` implies that `a != b` is `false`.
-    ///
-    /// - Parameters:
-    ///   - lhs: A value to compare.
-    ///   - rhs: Another value to compare.
-    public static func == (lhs: LifecycleEvent, rhs: LifecycleEvent) -> Bool {
-        lhs.hashValue == rhs.hashValue
-    }
-}
-
-/// Transition Error
-public enum TransitionError: Error {
+/// Errors thrown when firing a transition.
+public enum TransitionError: Error, Sendable {
+    /// The transition is not part of the machine.
     case unknown
+    /// The transition cannot be fired from the current state.
     case notAllowed
 }
 
-/// Context Struct
-private struct Context {
-    let queue: DispatchQueue
-    var block: ([AnyHashable: Any]?) -> Void
-}
+/// A thread-safe finite state machine.
+public actor StateMachine {
+    /// Payload forwarded to the lifecycle observers.
+    public typealias UserInfo = [String: any Sendable]
 
-open class StateMachine {
-    private var currentState: State
+    /// An observer closure invoked on a lifecycle event.
+    public typealias Observer = @Sendable (UserInfo?) async -> Void
 
-    private let transitionQueue = DispatchQueue(
-        label: "com.statemachine.transition",
-        qos: .default,
-        attributes: .concurrent,
-        autoreleaseFrequency: .inherit,
-        target: nil
-    )
+    /// Every state reachable by the machine.
+    public nonisolated let states: [State]
 
-    private lazy var states: [State] = .init()
-    private lazy var transitions: [Transition] = .init()
-    private lazy var map: [State: [Transition]] = .init()
-    private lazy var contexts: [LifecycleEvent: Context] = .init()
+    /// Every transition known to the machine.
+    public nonisolated let transitions: [Transition]
 
-    public init(
-        initialState: State,
-        transitions: [Transition]
-    ) {
+    /// The state the machine is currently in.
+    public private(set) var currentState: State
+
+    private let map: [State: [Transition]]
+    private var observers: [LifecycleEvent: Observer] = [:]
+
+    /// Creates a machine starting on `initialState`.
+    ///
+    /// - Parameters:
+    ///   - initialState: The state the machine starts in.
+    ///   - transitions: The transitions the machine accepts.
+    public init(initialState: State, transitions: [Transition]) {
         self.currentState = initialState
-        configure(transitions: transitions)
+        (self.states, self.transitions, self.map) = Self.build(transitions: transitions)
     }
 
-    private func configure(transitions: [Transition]) {
-        transitions.forEach { transition in
-            map(transition: transition)
-        }
-    }
+    private static func build(
+        transitions: [Transition]
+    ) -> (states: [State], transitions: [Transition], map: [State: [Transition]]) {
+        var states: [State] = []
+        var knownTransitions: [Transition] = []
+        var map: [State: [Transition]] = [:]
 
-    private func map(transition: Transition) {
-        add(state: transition.from)
-        add(state: transition.to)
-        add(transition: transition)
+        for transition in transitions {
+            for state in [transition.from, transition.to] where map[state] == nil {
+                states.append(state)
+                map[state] = []
+            }
 
-        if var set = map[transition.from] {
-            set.append(transition)
-            map[transition.from] = set
-        }
-    }
+            guard !knownTransitions.contains(transition) else { continue }
 
-    private func add(state: State) {
-        guard map[state] == nil else {
-            return
+            knownTransitions.append(transition)
+            map[transition.from]?.append(transition)
         }
 
-        states.append(state)
-        map[state] = [Transition]()
-    }
-
-    private func add(transition: Transition) {
-        guard !transitions.contains(transition) else {
-            return
-        }
-
-        transitions.append(transition)
+        return (states, knownTransitions, map)
     }
 
     // MARK: Transition
 
-    public func fire(
-        transition: Transition,
-        userInfo: [AnyHashable: Any]?
-    ) throws {
-        if !transitions.contains(transition) {
+    /// Fires a transition and runs the matching lifecycle observers in order.
+    ///
+    /// - Parameters:
+    ///   - transition: The transition to fire.
+    ///   - userInfo: A payload forwarded to the `onState` and `onTransition` observers.
+    /// - Throws: ``TransitionError/unknown`` when the transition is not part of the machine,
+    ///   ``TransitionError/notAllowed`` when it cannot be fired from the current state.
+    public func fire(transition: Transition, userInfo: UserInfo? = nil) async throws {
+        guard transitions.contains(transition) else {
             throw TransitionError.unknown
         }
-
-        if !canFire(transition: transition) {
+        guard canFire(transition: transition) else {
             throw TransitionError.notAllowed
         }
 
-        transitionQueue.async(flags: .barrier) { [weak self] in
-            self?.begin(transition)
-            self?.execute(
-                transition,
-                userInfo: userInfo
-            )
-            self?.end(transition)
-        }
+        await notify(.beforeTransition(transition))
+        await notify(.leaveState(transition.from))
+
+        currentState = transition.to
+
+        await notify(.onState(transition.to), userInfo: userInfo)
+        await notify(.onTransition(transition), userInfo: userInfo)
+        await notify(.afterTransition(transition))
     }
 
     // MARK: Observer
 
-    public func on(
-        _ event: LifecycleEvent,
-        queue: DispatchQueue = DispatchQueue.main,
-        using block: @escaping ([AnyHashable: Any]?) -> Void
-    ) {
-        let context = Context(
-            queue: queue,
-            block: block
-        )
-        contexts[event] = context
+    /// Registers an observer for a lifecycle event, replacing any previous one.
+    ///
+    /// - Parameters:
+    ///   - event: The lifecycle event to observe.
+    ///   - block: The closure invoked when the event happens.
+    public func on(_ event: LifecycleEvent, using block: @escaping Observer) {
+        observers[event] = block
     }
 
-    // MARK: Lifecycle
-
-    private func begin(_ transition: Transition) {
-        if let context = contexts[.beforeTransition(transition)] {
-            context.queue.async {
-                context.block(nil)
-            }
-        }
-
-        if let context = contexts[.leaveState(transition.from)] {
-            context.queue.async {
-                context.block(nil)
-            }
-        }
-    }
-
-    private func execute(
-        _ transition: Transition,
-        userInfo: [AnyHashable: Any]?
-    ) {
-        currentState = transition.to
-
-        if let context = contexts[.onState(transition.to)] {
-            context.queue.async {
-                context.block(userInfo)
-            }
-        }
-
-        if let context = contexts[.onTransition(transition)] {
-            context.queue.async {
-                context.block(userInfo)
-            }
-        }
-    }
-
-    private func end(_ transition: Transition) {
-        if let context = contexts[.afterTransition(transition)] {
-            context.queue.async {
-                context.block(nil)
-            }
-        }
+    private func notify(_ event: LifecycleEvent, userInfo: UserInfo? = nil) async {
+        await observers[event]?(userInfo)
     }
 
     // MARK: Helpers
 
-    public func isCurrent(state: State) -> Bool {
-        var isCurrent = false
-
-        transitionQueue.sync {
-            isCurrent = (state == currentState)
-        }
-
-        return isCurrent
+    /// The transitions that can be fired from the current state.
+    public var allowedTransitions: [Transition] {
+        map[currentState] ?? []
     }
 
+    /// Returns whether `transition` can be fired from the current state.
     public func canFire(transition: Transition) -> Bool {
-        guard let allowedTransition = allowedTransitions() else {
-            return false
-        }
-
-        return !(allowedTransition.filter {
-            $0 == transition
-        }.isEmpty)
+        allowedTransitions.contains(transition)
     }
 
-    public func allowedTransitions() -> [Transition]? {
-        var allowedTransition: [Transition]?
-
-        transitionQueue.sync {
-            allowedTransition = map[currentState]
-        }
-
-        return allowedTransition
+    /// Returns the state named `name`, or `nil` when the machine has no such state.
+    public nonisolated func state(name: String) -> State? {
+        states.first { $0.name == name }
     }
 
-    public func state(name: String) -> State? {
-        var state: State?
-
-        transitionQueue.sync {
-            state = states.first(where: {
-                $0.name == name
-            })
-        }
-
-        return state
-    }
-
-    public func allStates() -> [State] {
-        var allStates = [State]()
-
-        transitionQueue.sync {
-            allStates = states
-        }
-
-        return allStates
-    }
-
-    public func transition(name: String) -> Transition? {
-        var transition: Transition?
-
-        transitionQueue.sync {
-            transition = transitions.first(where: {
-                $0.name == name
-            })
-        }
-
-        return transition
-    }
-
-    public func allTransitions() -> [Transition] {
-        var allTransitions = [Transition]()
-
-        transitionQueue.sync {
-            allTransitions = transitions
-        }
-
-        return allTransitions
+    /// Returns the transition named `name`, or `nil` when the machine has no such transition.
+    public nonisolated func transition(name: String) -> Transition? {
+        transitions.first { $0.name == name }
     }
 }
