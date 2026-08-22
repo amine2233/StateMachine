@@ -44,5 +44,5 @@ Carthage/Build
 docs/
 
 ## Secret files
-*.env
+.env*
 .envrc

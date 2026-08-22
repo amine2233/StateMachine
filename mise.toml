@@ -1,6 +1,6 @@
 [tools]
 swift = '6.3.1'
-"github:executor-cli/executor" = "0.28.4"
+"github:executor-cli/executor" = "0.28.5"
 
 [env]
 _.file = ".env.local"
