@@ -16,7 +16,7 @@ machine means persisting one string.
 ## Installation
 
 ```swift
-.package(url: "https://github.com/amine2233/StateMachine.git", from: "0.2.0")
+.package(url: "https://github.com/amine2233/StateMachine.git", from: "1.0.0")
 ```
 
 ```swift
